@@ -64,7 +64,15 @@ myProfile.placesLived.forEach(place => {
 
     let placeElement2 = document.createElement("dd");
     placeElement2.innerHTML = place.length;
+
+    let placeElement3 = document.createElement("dt");
+    placeElement3.innerHTML = place.place2;
+
+    let placeElemment4 = document.createElement("dd");
+    placeElemment4.innerHTML = place.length2;
     
     placesLivedElement.appendChild(placeElement1);
     placesLivedElement.appendChild(placeElement2);
+    placesLivedElement.appendChild(placeElement3);
+    placesLivedElement.appendChild(placeElemment4);
 })
