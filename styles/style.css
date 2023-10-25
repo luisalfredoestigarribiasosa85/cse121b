@@ -1,0 +1,165 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Montserrat', sans-serif;
+    background: #e0e0e0;
+    color: #1d1d1d
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    max-width: 400px;
+    width: 100%;
+}
+
+.search-bar input[type="text"] {
+    flex: 1;
+    height: 40px;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px 0 0 5px;
+    background: #fff;
+    color: #333;
+}
+
+.search-bar button {
+    height: 40px;
+    padding: 0 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    background: #067503;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+
+.search-bar button:hover {
+    background: #137c32;
+}
+
+.container {
+	width: 90%;
+	max-width: 1000px;
+	margin: 40px auto 100px auto;
+
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 40px;
+}
+
+.container .movie {
+	text-align: center;
+}
+
+.container .movie .title {
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.container .movie .poster {
+	width: 100%;
+	margin-bottom: 10px;
+	border-radius: 15px;
+	cursor: pointer;
+}
+
+.container .movie .title:hover {
+	color: #5a7db6;
+}
+
+.container .movie .poster:hover {
+	opacity: 0.8;
+}
+
+.page {
+	position: fixed;
+	bottom: 0;
+	background: #100a1f;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	padding: 10px;
+}
+
+.page button {
+	cursor: pointer;
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	height: 50px;
+	width: 200px;
+	background: #241744;
+	color: #fff;
+	border-radius: 100px;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 600;
+	transition: .3s ease all;
+}
+
+.page button:hover {
+	background: #137c32;
+}
+
+.movie-details-content {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+}
+
+.poster {
+    width: 200px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+.movie-info {
+    flex: 1;
+}
+
+
+.trailer-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.trailer iframe {
+    border: none;
+}
+/*Styles for the additional movie details section */
+.additional-details {
+    margin-top: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for individual details */
+.additional-details div {
+    margin-bottom: 10px;
+}
+
+.additional-details h3 {
+    margin-top: 20px;
+}
