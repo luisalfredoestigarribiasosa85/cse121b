@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Movie details - Movie App">
+    <meta name="description" content="Upcoming movies - Movie App">
     <link rel="shortcut icon" href="./images/movie.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/info.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>Movie Details - Movie App</title>
+    <title>Upcoming Movies - Movie App</title>
 </head>
 <body class="bg-dark text-light">
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -42,58 +41,38 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="upcoming.html">
+                        <a class="nav-link active" href="upcoming.html">
                             <i class="fas fa-calendar"></i> Upcoming
                         </a>
                     </li>
                 </ul>
+                <div class="search-wrapper">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Search for a movie...">
+                        <button id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="container py-4">
-        <div id="movie-details">
-            <!-- Movie details will be loaded here -->
-        </div>
-
-        <div id="trailer">
-            <!-- Movie trailer will be loaded here -->
-        </div>
-
-        <div class="additional-details">
-            <h2>Additional Information</h2>
-            <div class="info-grid">
-                <div class="info-item">
-                    <strong>Genre:</strong>
-                    <span id="genre">Loading...</span>
-                </div>
-                <div class="info-item">
-                    <strong>Release Date:</strong>
-                    <span id="release-date">Loading...</span>
-                </div>
-                <div class="info-item">
-                    <strong>Runtime:</strong>
-                    <span id="runtime">Loading...</span>
-                </div>
-                <div class="info-item">
-                    <strong>Director:</strong>
-                    <span id="director">Loading...</span>
-                </div>
-                <div class="info-item">
-                    <strong>Cast:</strong>
-                    <span id="cast">Loading...</span>
-                </div>
-                <div class="info-item">
-                    <strong>Production Studio:</strong>
-                    <span id="production-studio">Loading...</span>
-                </div>
-            </div>
-            <div class="plot-summary">
-                <h3>Plot Summary</h3>
-                <p id="plot-summary">Loading...</p>
-            </div>
+    <main>
+        <div class="container-fluid py-4">
+            <h1 class="text-center mb-4">Upcoming Movies</h1>
+            <div id="container" class="movie-grid"></div>
         </div>
     </main>
+
+    <div class="page">
+        <button id="btnPrevious">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <button id="btnNext">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
 
     <footer class="footer mt-5 py-3">
         <div class="container text-center">
@@ -106,11 +85,11 @@
         </div>
     </footer>
 
-    <script type="module" src="scripts/info.js"></script>
+    <script type="module" src="./scripts/upcoming.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Set current year in footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
 </body>
-</html>
+</html> 

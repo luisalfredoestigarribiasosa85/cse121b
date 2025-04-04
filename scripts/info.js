@@ -1,108 +1,140 @@
+import config from './config.js';
+
 // Get movie ID from the query parameter in the URL
 const urlParams = new URLSearchParams(window.location.search);
 const movieId = urlParams.get('id');
 
+// DOM Elements
+const movieDetailsContainer = document.getElementById('movie-details');
+
 const displayMovieDetails = async () => {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=798a8b7b717eac7d21066718600a122a&language=en-US`);
+        showLoading(movieDetailsContainer);
+        const response = await fetch(`${config.BASE_URL}/movie/${movieId}?api_key=${config.API_KEY}&language=en-US`);
         if (response.ok) {
             const movieData = await response.json();
-            // Display movie details on the page
-            const movieDetailsContainer = document.getElementById('movie-details');
-            const imageUrl = `https://image.tmdb.org/t/p/w500/${movieData.poster_path}`;
+            const imageUrl = movieData.poster_path
+                ? `https://image.tmdb.org/t/p/w500/${movieData.poster_path}`
+                : 'path/to/default-poster.jpg';
+
             movieDetailsContainer.innerHTML = `
                 <div class="movie-details-content">
                     <img class="poster" src="${imageUrl}" alt="${movieData.title}">
                     <div class="movie-info">
-                        <h2>${movieData.title}</h2>
-                        <p>${movieData.overview}</p>
-                        <!-- Add more movie details as needed -->
+                        <h1 class="movie-title">${movieData.title}</h1>
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span>${movieData.vote_average.toFixed(1)}/10</span>
+                            <span class="vote-count">(${movieData.vote_count} votes)</span>
+                        </div>
+                        <p class="movie-overview">${movieData.overview}</p>
+                        <div class="movie-meta">
+                            <span><i class="fas fa-calendar"></i> ${movieData.release_date}</span>
+                            <span><i class="fas fa-clock"></i> ${movieData.runtime} min</span>
+                        </div>
                     </div>
                 </div>
             `;
         } else {
-            console.error('Error fetching movie details');
+            showError(movieDetailsContainer, 'Error fetching movie details');
         }
     } catch (error) {
         console.error(error);
+        showError(movieDetailsContainer, 'An error occurred while loading movie details');
     }
 };
-
-// Call the function to display movie details
-displayMovieDetails();
-
-
-//Display movie trailers...
 
 const displayMovieTrailer = async () => {
+    const trailerContainer = document.getElementById('trailer');
     try {
-        // Fetch movie videos from TMDb API (assuming 'videos' endpoint returns trailers)
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=798a8b7b717eac7d21066718600a122a`);
+        showLoading(trailerContainer);
+        const response = await fetch(`${config.BASE_URL}/movie/${movieId}/videos?api_key=${config.API_KEY}`);
         if (response.ok) {
             const data = await response.json();
-            // Find a trailer among the videos (assuming type 'Trailer')
             const trailer = data.results.find(video => video.type === 'Trailer');
             if (trailer) {
-                // Embed YouTube video player
-                const trailerContainer = document.getElementById('trailer');
                 trailerContainer.innerHTML = `
-                    <iframe width="100%" height="400" src="https://www.youtube.com/embed/${trailer.key}" frameborder="0" allowfullscreen></iframe>
+                    <iframe 
+                        width="100%" 
+                        height="400" 
+                        src="https://www.youtube.com/embed/${trailer.key}"
+                        title="Movie Trailer"
+                        frameborder="0" 
+                        allowfullscreen>
+                    </iframe>
                 `;
             } else {
-                console.log('No trailer available for this movie.');
+                trailerContainer.innerHTML = '<p class="no-trailer">No trailer available for this movie.</p>';
             }
         } else {
-            console.error('Error fetching movie videos');
+            showError(trailerContainer, 'Error loading trailer');
         }
     } catch (error) {
         console.error(error);
+        showError(trailerContainer, 'An error occurred while loading the trailer');
     }
 };
-
-// Call the function to display the movie trailer
-displayMovieTrailer();
-
-
-// Display movie details...
 
 const displayAdditionalMovieDetails = async () => {
     try {
-        // Fetch detailed movie information from TMDb API
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=798a8b7b717eac7d21066718600a122a&language=en-US&append_to_response=credits`);
+        const response = await fetch(
+            `${config.BASE_URL}/movie/${movieId}?api_key=${config.API_KEY}&language=en-US&append_to_response=credits`
+        );
+
         if (response.ok) {
             const movieData = await response.json();
-            // Display additional movie details on the page
 
-            // Genre
-            document.getElementById('genre').textContent = movieData.genres.map(genre => genre.name).join(', ');
+            // Update each detail with error handling
+            updateElement('genre', movieData.genres.map(genre => genre.name).join(', ') || 'N/A');
+            updateElement('release-date', movieData.release_date || 'N/A');
+            updateElement('runtime', movieData.runtime || 'N/A');
 
-            // Release Date
-            document.getElementById('release-date').textContent = movieData.release_date;
-
-            // Runtime
-            document.getElementById('runtime').textContent = movieData.runtime;
-
-            // Director
             const director = movieData.credits.crew.find(member => member.job === 'Director');
-            document.getElementById('director').textContent = director ? director.name : 'N/A';
+            updateElement('director', director ? director.name : 'N/A');
 
-            // Cast
-            const castNames = movieData.credits.cast.map(member => member.name).join(', ');
-            document.getElementById('cast').textContent = castNames;
+            const mainCast = movieData.credits.cast
+                .slice(0, 5)
+                .map(member => member.name)
+                .join(', ');
+            updateElement('cast', mainCast || 'N/A');
 
-            // Production Studio
-            document.getElementById('production-studio').textContent = movieData.production_companies.map(company => company.name).join(', ');
+            updateElement('production-studio',
+                movieData.production_companies.map(company => company.name).join(', ') || 'N/A'
+            );
 
-            // Plot Summary
-            document.getElementById('plot-summary').textContent = movieData.overview;
+            updateElement('plot-summary', movieData.overview || 'No plot summary available.');
         } else {
-            console.error('Error fetching additional movie details');
+            showError(document.querySelector('.additional-details'), 'Error fetching additional movie details');
         }
     } catch (error) {
         console.error(error);
+        showError(document.querySelector('.additional-details'), 'An error occurred while loading additional details');
     }
 };
 
-// Call the function to display additional movie details
-displayAdditionalMovieDetails();
+// Utility functions
+const showLoading = (container) => {
+    container.innerHTML = '<div class="loading">Loading...</div>';
+};
+
+const showError = (container, message) => {
+    container.innerHTML = `<div class="error">${message}</div>`;
+};
+
+const updateElement = (id, content) => {
+    const element = document.getElementById(id);
+    if (element) {
+        element.textContent = content;
+    }
+};
+
+// Check if movie ID exists
+if (!movieId) {
+    showError(movieDetailsContainer, 'No movie ID provided');
+} else {
+    // Initialize all data fetching
+    displayMovieDetails();
+    displayMovieTrailer();
+    displayAdditionalMovieDetails();
+}
 

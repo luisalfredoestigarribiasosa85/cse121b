@@ -10,22 +10,32 @@ const container = document.getElementById('container');
 btnNext.addEventListener('click', () => {
     if (page < config.MAX_PAGES) {
         page += 1;
-        loadMovies();
+        loadPopularMovies();
     }
 });
 
 btnPrevious.addEventListener('click', () => {
     if (page > 1) {
         page -= 1;
-        loadMovies();
+        loadPopularMovies();
     }
 });
 
 searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     if (query) {
-        page = 1; // Reset to first page for new searches
+        page = 1;
         searchMovies(query);
+    }
+});
+
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const query = searchInput.value.trim();
+        if (query) {
+            page = 1;
+            searchMovies(query);
+        }
     }
 });
 
@@ -47,7 +57,7 @@ const searchMovies = async (query) => {
     }
 };
 
-const loadMovies = async () => {
+const loadPopularMovies = async () => {
     try {
         showLoading();
         const api = await fetch(`${config.BASE_URL}/movie/popular?api_key=${config.API_KEY}&language=en-US&page=${page}`);
@@ -75,7 +85,7 @@ const displayMovies = (movies) => {
     movies.forEach(movie => {
         const posterPath = movie.poster_path
             ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-            : 'path/to/default-poster.jpg'; // Add a default poster image
+            : 'path/to/default-poster.jpg';
         moviesHtml += `
             <div class="movie" id="movie-${movie.id}">
                 <img class="poster" src="${posterPath}" alt="${movie.title}">
@@ -94,7 +104,6 @@ const displayMovies = (movies) => {
     });
 };
 
-// UI Helper Functions
 const showLoading = () => {
     container.innerHTML = '<div class="loading">Loading...</div>';
 };
@@ -110,16 +119,5 @@ const showError = (message) => {
     container.innerHTML = `<div class="error">${message}</div>`;
 };
 
-// Add enter key support for search
-searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        const query = searchInput.value.trim();
-        if (query) {
-            page = 1;
-            searchMovies(query);
-        }
-    }
-});
-
 // Initial load of popular movies
-loadMovies();
+loadPopularMovies(); 
